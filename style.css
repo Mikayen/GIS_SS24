@@ -1,0 +1,20 @@
+body{
+    background-color: burlywood;
+}
+h1{
+    color: black;
+    font-style:italic;
+    font-family: cursive;
+    margin-left: 1%;
+}
+.Tabelle{
+    background-color: burlywood;
+    width: 80vw;
+    height: 90vh;
+    border: 20px black groove;
+}
+table{
+    color: cadetblue;
+    font-family: cursive;
+    margin-left: 1%;
+}
