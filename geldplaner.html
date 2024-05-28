@@ -7,6 +7,7 @@
     <meta name="author" content="Mikayen" />
     <title>Geldplaner</title>
     <link rel="stylesheet" href="style.css">
+    <script src=" ./script.js" defer></script>
 </head>
 <header class="header">
     <h1><a href="index.html">Moneysaver</a></h1>
@@ -19,31 +20,25 @@
     </nav>
 </header>
 <body>
-    <script src=" ./script.js"></script>
-    <div class="tabelle"> 
+    <div class="tabelle" id="ausgabenTabelle"> 
     <table>
         <tr>
             <th>Ausgaben</th>
             <th>Betrag</th>
+            <th>Aktionen</th>
         </tr>
-        <tr>
-            <td>Wocheneinkauf</td>
-            <td>50€</td>
-        </tr>
-        <tr>
-            <td>Miete</td>
-            <td>700€</td>
-        </tr>
-    
+    <tfoot>
         <tr class="gesamt">
             <td>Gesamt</td>
-            <td id="gesamt">750€</td>
+            <td id="gesamtBetrag">0€</td>
+            <td></td>
         </tr>
+    </tfoot>
     </table>
     <div class="buttons" > 
-        <button class="button"> Hinzufügen</button>
-        <button class="button"> Bearbeiten</button>
-        <button class="button"> Löschen</button>
+        <button class="button" id="hinzufuegenButton"> Hinzufügen</button>
+        <!--<button class="button" id="bearbeitenButton"> Bearbeiten</button>-->
+        <button class="button" id="allesLoeschenButton"> Alles Löschen</button>
     </div>
 </div>
 </body> 
