@@ -10,6 +10,7 @@ document.getElementById('hinzufuegenButton').addEventListener('click', function(
     let betrag = prompt("Bitte geben Sie den Betrag ein:");
     // Sicherstellen, dass beide Eingaben gemacht wurden
     if (ausgaben && betrag) {
+
         // Neue Zeile zur Tabelle hinzufügen
         let tabelle = document.getElementById('ausgabenTabelle').getElementsByTagName('tbody')[0];
         let neueReihe = tabelle.insertRow();
@@ -32,11 +33,29 @@ document.getElementById('hinzufuegenButton').addEventListener('click', function(
         loeschenButton.textContent = 'Löschen';
         loeschenButton.addEventListener('click', loeschen);
         zelleAktionen.append(loeschenButton);
+
         
         let neueAusgabe = {
             ausgaben: ausgaben,
             betrag: betrag
         };
+
+        fetch('http://127.0.0.1:3000//', {
+            //Daten zum Server gesendet
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(neueAusgabe)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Serverantwort:', data);
+           
+        })
+        .catch(error => {
+            console.error('Fehler beim Senden der POST-Anfrage:', error);
+        });
         // Daten zum localStorage hinzufügen
         let ausgabenListe = JSON.parse(localStorage.getItem('ausgabenListe')) || [];
         ausgabenListe.push(neueAusgabe);
@@ -67,6 +86,23 @@ function bearbeiten(event) {
             ausgaben: ausgaben,
             betrag: betrag
         };
+
+        
+        fetch('http://127.0.0.1:3000/', {
+            //Daten zum Server gesendet
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(neueAusgabe)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Serverantwort:', data);
+        })
+        .catch(error => {
+            console.error('Fehler beim Senden der POST-Anfrage:', error);
+        });
 
         let ausgabenListe = JSON.parse(localStorage.getItem('ausgabenListe')) || [];
         ausgabenListe.splice(index-1, 1, neueAusgabe );
@@ -108,31 +144,41 @@ function update() {
 
 // Beim Laden der Seite überprüfen, ob gespeicherte Daten vorhanden sind
 window.addEventListener('DOMContentLoaded', function() {
-    let ausgabenListe = JSON.parse(localStorage.getItem('ausgabenListe')) || [];
+    fetch('http://127.0.0.1:3000/')
+            .then(response => response.json())
+            .then(data => {
+                let ausgabenListe = data;
+        //let ausgabenListe = JSON.parse(localStorage.getItem('ausgabenListe')) || [];
 
-    // Tabelle mit gespeicherten Daten füllen
-    let tabelle = document.getElementById('ausgabenTabelle').getElementsByTagName('tbody')[0];
-    ausgabenListe.forEach(function(Zeile) {
-        let newRow = tabelle.insertRow();
-        let zelleAusgaben = newRow.insertCell(0);
-        let zelleBetrag = newRow.insertCell(1);
-        let zelleAktionen = newRow.insertCell(2);
-        zelleAusgaben.textContent = Zeile.ausgaben;
-        zelleBetrag.textContent = Zeile.betrag + '€';
+        // Tabelle mit gespeicherten Daten füllen
+        let tabelle = document.getElementById('ausgabenTabelle').getElementsByTagName('tbody')[0];
+        ausgabenListe.forEach(function(Zeile) {
+            let newRow = tabelle.insertRow();
+            let zelleAusgaben = newRow.insertCell(0);
+            let zelleBetrag = newRow.insertCell(1);
+            let zelleAktionen = newRow.insertCell(2);
+            zelleAusgaben.textContent = Zeile.ausgaben;
+            zelleBetrag.textContent = Zeile.betrag + '€';
 
-        let bearbeitenButton = document.createElement('button');
-        bearbeitenButton.className = 'bearbeitenButton';
-        bearbeitenButton.textContent = 'Bearbeiten';
-        bearbeitenButton.addEventListener('click', bearbeiten);
-        zelleAktionen.append(bearbeitenButton);
+            let bearbeitenButton = document.createElement('button');
+            bearbeitenButton.className = 'bearbeitenButton';
+            bearbeitenButton.textContent = 'Bearbeiten';
+            bearbeitenButton.addEventListener('click', bearbeiten);
+            zelleAktionen.append(bearbeitenButton);
 
-        let loeschenButton = document.createElement('button');
-        loeschenButton.className = 'loeschenButton';
-        loeschenButton.textContent = 'Löschen';
-        loeschenButton.addEventListener('click', loeschen);
-        zelleAktionen.append(loeschenButton);
-    });
-
+            let loeschenButton = document.createElement('button');
+            loeschenButton.className = 'loeschenButton';
+            loeschenButton.textContent = 'Löschen';
+            loeschenButton.addEventListener('click', loeschen);
+            zelleAktionen.append(loeschenButton);
+        });
+        update();
+    })
     // Gesamt aktualisieren
-    update();
+    .catch(error => {
+        console.error('Fehler beim Laden der Ausgaben:', error);
+    });
 });
+
+
+//Inputfelder / Formulare 
