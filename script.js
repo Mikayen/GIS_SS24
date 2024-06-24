@@ -40,7 +40,7 @@ document.getElementById('hinzufuegenButton').addEventListener('click', function(
             betrag: betrag
         };
 
-        fetch('http://127.0.0.1:3000//', {
+        fetch('http://127.0.0.1:3000/', {
             //Daten zum Server gesendet
             method: 'POST',
             headers: {

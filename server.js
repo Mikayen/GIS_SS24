@@ -6,19 +6,21 @@ let ausgabenListe = [];
 
 
 const server = http.createServer((request, response) => {
+    response.statusCode = 200;
+    response.setHeader('Access-Control-Allow-Origin', '*');
     if (request.method === 'GET') {
+        response.setHeader('Content-Type', 'application/json');
         response.end(JSON.stringify(ausgabenListe));
 
     } else if (request.method === 'POST') {
         // Falls POST-Request, verarbeite die Daten
         request.on('data', (data) => {
             ausgabenListe.push(data);
-            localStorage.setItem('ausgabenListe', JSON.stringify(ausgabenListe));
 
         });
-
         request.on('end', () => {
         response.setHeader('Content-Type', 'application/json');
+        console.log(JSON.stringify(ausgabenListe));
         response.end(JSON.stringify(ausgabenListe));
         });
     }
