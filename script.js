@@ -44,7 +44,7 @@ document.getElementById('hinzufuegenButton').addEventListener('click', function(
             betrag: betrag
         };
 
-        /*fetch('http://127.0.0.1:3000/', {
+        fetch('http://127.0.0.1:3000/', {
             //Daten zum Server gesendet
             method: 'POST',
             headers: {
@@ -55,7 +55,7 @@ document.getElementById('hinzufuegenButton').addEventListener('click', function(
         .then(response => response.json())
         .then(data => {
             console.log('Serverantwort:', data);
-        })*/
+        })
 
     } else {
         alert("Bitte geben Sie Ausgaben und Betrag ein.");
