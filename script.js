@@ -51,7 +51,6 @@ document.getElementById('hinzufuegenButton').addEventListener('click', function(
         .then(response => response.json())
         .then(data => {
             console.log('Serverantwort:', data);
-           
         })
         .catch(error => {
             console.error('Fehler beim Senden der POST-Anfrage:', error);
