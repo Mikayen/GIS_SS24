@@ -1,12 +1,12 @@
-/*document.getElementById('allesLoeschenButton').addEventListener('click', function() {
-    fetch('http://127.0.0.1:3000/', {
-        method: 'DELETEALL',
+document.getElementById('allesLoeschenButton').addEventListener('click', function() {
+    fetch('http://127.0.0.1:3000/deleteall', {
+        method: 'DELETE',
     })
     .then(response => response.json())
     .then(() => { 
     location.reload();
     })
-});*/
+});
 
 document.getElementById('hinzufuegenButton').addEventListener('click', function() {
     // Eingabefeld für Ausgaben und Betrag anzeigen
@@ -108,11 +108,23 @@ function loeschen(event) {
     
     let zeile = event.target.parentElement.parentElement;
     console.log(zeile);
+    loeschenId = zeile.cells[0].textContent;
+    console.log(loeschenId);
+
+    let neueAusgabe = {
+        id: loeschenId,
+        betrag: 0
+    };
+
     if (confirm("Möchten Sie die Zeile löschen?")){
         zeile.remove();
 
         fetch('http://127.0.0.1:3000/', {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(neueAusgabe)
         })
         .then(response => response.json())
     }

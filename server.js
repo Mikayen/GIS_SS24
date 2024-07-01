@@ -19,6 +19,7 @@ const server = http.createServer((request, response) => {
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    const url = new URL(request.url || '', `http://${request.headers.host}`);
     console.log(request.method);
     if (request.method === 'GET') {
         console.log("sind im get ")
@@ -47,17 +48,22 @@ const server = http.createServer((request, response) => {
             db.run('INSERT INTO ausgaben (id, betrag) VALUES (?, ?)', [JSON.parse(jsonString).id, JSON.parse(jsonString).betrag])
         });
         
-    } else if (request.method === 'DELETE') {
-        /*let jsonString = '';
-        request.on('data', (data) => {
-            jsonString += data; id hierraus suchen*/
 
-        const idToDelete = request.url.substring('/ausgaben/'.length);
-        db.run('DELETE FROM ausgaben WHERE id = ?', [idToDelete])
-    } /*else if (request.method === 'DELETEALL') {
+    } else if (request.method === 'DELETE' &&  url.pathname === '/deleteall') {
+
         db.run('DELETE FROM ausgaben')
-    }*/
-    else if (request.method === 'PUT') {
+
+    } else if (request.method === 'DELETE') {
+        let jsonString = '';
+        request.on('data', (data) => {
+            jsonString += data;
+        });
+        request.on('end', () => {
+            const {id, betrag} = JSON.parse(jsonString);
+            db.run('DELETE FROM ausgaben WHERE id = ?', [id])
+        });
+    
+    } else if (request.method === 'PUT') {
 
         let jsonString = '';
         request.on('data', (data) => {
