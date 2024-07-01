@@ -17,25 +17,33 @@ db.serialize(() => {
 const server = http.createServer((request, response) => {
     response.statusCode = 200;
     response.setHeader('Access-Control-Allow-Origin', '*');
-    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
+    console.log(request.method);
     if (request.method === 'GET') {
-
+        console.log("sind im get ")
         response.setHeader('Content-Type', 'application/json');
-        db.all('SELECT * FROM ausgaben', (rows) => {
+        db.all('SELECT * FROM ausgaben', (err, rows) => {
+            console.log(JSON.stringify(err))
+            console.log(JSON.stringify(rows))
         response.end(JSON.stringify(rows));
         
     })
 
+    } else if (request.method === 'OPTIONS') {
+        response.end();
+
+        
     } else if (request.method === 'POST') {
         // Falls POST-Request, verarbeite die Daten
+        console.log("sind im post ")
         let jsonString = '';
         request.on('data', (data) => {
             jsonString += data;
 
         });
         request.on('end', () => {
+            console.log(jsonString)
             db.run('INSERT INTO ausgaben (id, betrag) VALUES (?, ?)', [JSON.parse(jsonString).id, JSON.parse(jsonString).betrag])
         });
         
@@ -58,10 +66,10 @@ const server = http.createServer((request, response) => {
             
         });
     }
-    response.end()
-    db.each('SELECT * FROM ausgaben', (err, row) => {
+    //response.end()
+    /*db.each('SELECT * FROM ausgaben', (err, row) => {
         console.log(`${row.id} - ${row.betrag}`)})
-
+*/
 });
 
 server.listen(port, hostname, () => {

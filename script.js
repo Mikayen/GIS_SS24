@@ -8,6 +8,8 @@
     })
 });*/
 
+const { Console } = require("console");
+
 document.getElementById('hinzufuegenButton').addEventListener('click', function() {
     // Eingabefeld für Ausgaben und Betrag anzeigen
     let ausgaben = prompt("Bitte geben Sie die Ausgaben ein:");
@@ -103,7 +105,9 @@ function bearbeiten(event) {
 }
 
 function loeschen(event) {
+    
     let zeile = event.target.parentElement.parentElement;
+    console.log(zeile);
     if (confirm("Möchten Sie die Zeile löschen?")){
         zeile.remove();
 
@@ -136,7 +140,6 @@ window.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 let ausgabenListe = data;
 
-        //let ausgabenListe = JSON.parse(localStorage.getItem('ausgabenListe')) || [];
 
         // Tabelle mit gespeicherten Daten füllen
         let tabelle = document.getElementById('ausgabenTabelle').getElementsByTagName('tbody')[0];
@@ -146,7 +149,7 @@ window.addEventListener('DOMContentLoaded', function() {
             let zelleAusgaben = newRow.insertCell(0);
             let zelleBetrag = newRow.insertCell(1);
             let zelleAktionen = newRow.insertCell(2);
-            zelleAusgaben.textContent = Zeile.ausgaben;
+            zelleAusgaben.textContent = Zeile.id;
             zelleBetrag.textContent = Zeile.betrag + '€';
 
             let bearbeitenButton = document.createElement('button');
