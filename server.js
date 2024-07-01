@@ -48,20 +48,27 @@ const server = http.createServer((request, response) => {
         });
         
     } else if (request.method === 'DELETE') {
-        
+        /*let jsonString = '';
+        request.on('data', (data) => {
+            jsonString += data; id hierraus suchen*/
+
         const idToDelete = request.url.substring('/ausgaben/'.length);
         db.run('DELETE FROM ausgaben WHERE id = ?', [idToDelete])
     } /*else if (request.method === 'DELETEALL') {
         db.run('DELETE FROM ausgaben')
     }*/
     else if (request.method === 'PUT') {
+
         let jsonString = '';
         request.on('data', (data) => {
             jsonString += data;
         });
         request.on('end', () => {
-            const { id, betrag } = JSON.parse(jsonString);
-            db.run('UPDATE ausgaben SET betrag = ? WHERE id = ?', [betrag, id]) 
+            const { id, alteid, betrag } = JSON.parse(jsonString);
+            console.log(id);
+            console.log(alteid);
+            console.log(betrag);
+            db.run('UPDATE ausgaben SET betrag = ?, id = ? WHERE id = ?', [betrag, id, alteid]) 
             response.end(JSON.stringify({ id, betrag }));
             
         });

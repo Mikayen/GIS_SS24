@@ -8,8 +8,6 @@
     })
 });*/
 
-const { Console } = require("console");
-
 document.getElementById('hinzufuegenButton').addEventListener('click', function() {
     // Eingabefeld für Ausgaben und Betrag anzeigen
     let ausgaben = prompt("Bitte geben Sie die Ausgaben ein:");
@@ -76,11 +74,13 @@ function bearbeiten(event) {
         // .target = knopf .targer.parent = zelle .target.parent.parent = zeile
         let zeile = event.target.parentElement.parentElement;
         // Zellen für Ausgaben und Betrag aktualisieren
+        let alteid = zeile.cells[0].textContent;
         zeile.cells[0].textContent = ausgaben;
         zeile.cells[1].textContent = betrag + '€';
 
         let neueAusgabe = {
             id: ausgaben,
+            alteid : alteid,
             betrag: betrag
         };
 
