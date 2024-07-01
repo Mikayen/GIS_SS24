@@ -1,8 +1,12 @@
-document.getElementById('allesLoeschenButton').addEventListener('click', function() {
-    let ausgabenListe = [];
-    localStorage.setItem('ausgabenListe', JSON.stringify(ausgabenListe));
+/*document.getElementById('allesLoeschenButton').addEventListener('click', function() {
+    fetch('http://127.0.0.1:3000/', {
+        method: 'DELETEALL',
+    })
+    .then(response => response.json())
+    .then(() => { 
     location.reload();
-});
+    })
+});*/
 
 document.getElementById('hinzufuegenButton').addEventListener('click', function() {
     // Eingabefeld für Ausgaben und Betrag anzeigen
@@ -36,11 +40,11 @@ document.getElementById('hinzufuegenButton').addEventListener('click', function(
 
         
         let neueAusgabe = {
-            ausgaben: ausgaben,
+            id: ausgaben,
             betrag: betrag
         };
 
-        fetch('http://127.0.0.1:3000/', {
+        /*fetch('http://127.0.0.1:3000/', {
             //Daten zum Server gesendet
             method: 'POST',
             headers: {
@@ -51,14 +55,7 @@ document.getElementById('hinzufuegenButton').addEventListener('click', function(
         .then(response => response.json())
         .then(data => {
             console.log('Serverantwort:', data);
-        })
-        .catch(error => {
-            console.error('Fehler beim Senden der POST-Anfrage:', error);
-        });
-        // Daten zum localStorage hinzufügen
-        let ausgabenListe = JSON.parse(localStorage.getItem('ausgabenListe')) || [];
-        ausgabenListe.push(neueAusgabe);
-        localStorage.setItem('ausgabenListe', JSON.stringify(ausgabenListe));
+        })*/
 
     } else {
         alert("Bitte geben Sie Ausgaben und Betrag ein.");
@@ -76,20 +73,18 @@ function bearbeiten(event) {
     if (ausgaben && betrag) {
         // .target = knopf .targer.parent = zelle .target.parent.parent = zeile
         let zeile = event.target.parentElement.parentElement;
-        let index = Array.from(zeile.parentElement.children).indexOf(zeile);
         // Zellen für Ausgaben und Betrag aktualisieren
         zeile.cells[0].textContent = ausgaben;
         zeile.cells[1].textContent = betrag + '€';
 
         let neueAusgabe = {
-            ausgaben: ausgaben,
+            id: ausgaben,
             betrag: betrag
         };
 
-        
         fetch('http://127.0.0.1:3000/', {
             //Daten zum Server gesendet
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -99,13 +94,6 @@ function bearbeiten(event) {
         .then(data => {
             console.log('Serverantwort:', data);
         })
-        .catch(error => {
-            console.error('Fehler beim Senden der POST-Anfrage:', error);
-        });
-
-        let ausgabenListe = JSON.parse(localStorage.getItem('ausgabenListe')) || [];
-        ausgabenListe.splice(index-1, 1, neueAusgabe );
-        localStorage.setItem('ausgabenListe', JSON.stringify(ausgabenListe));
 
     } else {
         alert("Bitte geben Sie Ausgaben und Betrag ein.");
@@ -117,12 +105,12 @@ function bearbeiten(event) {
 function loeschen(event) {
     let zeile = event.target.parentElement.parentElement;
     if (confirm("Möchten Sie die Zeile löschen?")){
-        let index = Array.from(zeile.parentElement.children).indexOf(zeile);
         zeile.remove();
-        let ausgabenListe = JSON.parse(localStorage.getItem('ausgabenListe')) || [];
-        ausgabenListe.splice(index-1, 1);
-        localStorage.setItem('ausgabenListe', JSON.stringify(ausgabenListe));
 
+        fetch('http://127.0.0.1:3000/', {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
     }
     update();
     
@@ -141,17 +129,19 @@ function update() {
 
 }
 
-// Beim Laden der Seite überprüfen, ob gespeicherte Daten vorhanden sind
+// Beim Laden der Seite mit Daten füllen, falls vorhanden
 window.addEventListener('DOMContentLoaded', function() {
     fetch('http://127.0.0.1:3000/')
             .then(response => response.json())
             .then(data => {
                 let ausgabenListe = data;
+
         //let ausgabenListe = JSON.parse(localStorage.getItem('ausgabenListe')) || [];
 
         // Tabelle mit gespeicherten Daten füllen
         let tabelle = document.getElementById('ausgabenTabelle').getElementsByTagName('tbody')[0];
         ausgabenListe.forEach(function(Zeile) {
+            console.log(Zeile)
             let newRow = tabelle.insertRow();
             let zelleAusgaben = newRow.insertCell(0);
             let zelleBetrag = newRow.insertCell(1);
@@ -174,9 +164,6 @@ window.addEventListener('DOMContentLoaded', function() {
         update();
     })
     // Gesamt aktualisieren
-    .catch(error => {
-        console.error('Fehler beim Laden der Ausgaben:', error);
-    });
 });
 
 
